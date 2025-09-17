@@ -6,3 +6,4 @@ lint:
 format:
 	black --verbose --config black.toml .
 	isort --sp .isort.cfg .
+
