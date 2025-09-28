@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  telegram_bot:
+    image: email_reader_front:latest
+    env_file:
+      - .env
+    restart: unless-stopped

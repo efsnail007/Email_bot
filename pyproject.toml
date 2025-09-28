@@ -1,23 +1,19 @@
-[project]
+[tool.poetry]
 name = "email-bot"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "snail",email = "sgefsnkiospch908@gmail.com"}
-]
-readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "django (>=5.2.6,<6.0.0)",
-    "black (>=25.1.0,<26.0.0)",
-    "isort (>=6.0.1,<7.0.0)",
-    "djangorestframework (>=3.16.1,<4.0.0)",
-    "redis (>=6.4.0,<7.0.0)",
-    "aiogram (>=3.22.0,<4.0.0)",
-    "python-dotenv (>=1.1.1,<2.0.0)"
-]
+description = "IU3"
+package-mode = false
+authors = ["snail <sgefsnkiospch908@gmail.com>"]
 
+[tool.poetry.dependencies]
+python = "^3.13"
+aiogram = "^3.22.0"
+python-decouple = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.9.0"
+isort = "^6.0.1"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
