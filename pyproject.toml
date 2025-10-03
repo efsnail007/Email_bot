@@ -9,6 +9,10 @@ authors = ["snail <sgefsnkiospch908@gmail.com>"]
 python = "^3.13"
 aiogram = "^3.22.0"
 python-decouple = "^3.8"
+redis = "^6.4.0"
+django = "^5.2.7"
+psycopg2-binary = "^2.9.10"
+djangorestframework = "^3.16.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.9.0"

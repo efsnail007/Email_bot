@@ -1,26 +1,12 @@
-from aiogram import F, Router
-from aiogram.filters import Command, CommandStart
+from aiogram import Router
 from aiogram.types import Message
+from aiogram.filters import Command
+from keyboards.all_keyboards import main_kb
 
 start_router = Router()
 
-
-@start_router.message(CommandStart())
+@start_router.message(Command('start'))
 async def cmd_start(message: Message):
-    await message.answer(
-        "Запуск сообщения по команде /start используя фильтр CommandStart()",
-    )
-
-
-@start_router.message(Command("start_2"))
-async def cmd_start_2(message: Message):
-    await message.answer(
-        "Запуск сообщения по команде /start_2 используя фильтр Command()"
-    )
-
-
-@start_router.message(F.text == "/start_3")
-async def cmd_start_3(message: Message):
-    await message.answer(
-        "Запуск сообщения по команде /start_3 используя магический фильтр F.text!"
-    )
+    message.from_user.first_name
+    await message.answer(f'{message.from_user.first_name}:{message.from_user.last_name}',
+                         reply_markup=main_kb())

@@ -1,8 +1,35 @@
 version: '3.8'
 
 services:
-  telegram_bot:
-    image: email_reader_front:latest
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
     env_file:
       - .env
-    restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  telegram_bot:
+    image: email_reader_front:latest
+    container_name: telegram_bot_container
+    env_file:
+      - .env
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+    command: >
+      sh -c '
+        mkdir -p /usr/local/etc/redis &&
+        echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf &&
+        redis-server /usr/local/etc/redis/redis.conf
+      '
+    volumes:
+      - db-data:/var/lib/redis/data
+
+
+volumes:
+  db-data:
