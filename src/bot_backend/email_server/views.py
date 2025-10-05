@@ -16,7 +16,7 @@ class UserAPI(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -24,7 +24,7 @@ class UserDetailAPI(APIView):
     def get(self, request, tg_id, format=None):
         user = get_object_or_404(User, pk=tg_id)
         serializer = UserSerializer(user)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class EmailAPI(APIView):

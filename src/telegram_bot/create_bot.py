@@ -6,10 +6,15 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage
 from decouple import AutoConfig
+from utils.api_client import BackendAPIClient
+from utils.http_client import HTTPClient
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 config = AutoConfig(search_path=BASE_DIR)
+
+backend_client = HTTPClient(base_url=config("BACKEND_URL"))
+api_client = BackendAPIClient(client=backend_client)
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
