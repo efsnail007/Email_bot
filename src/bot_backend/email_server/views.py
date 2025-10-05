@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .apps import EmailServerConfig
+from .email_reader import EmailReader
 from .models import Email, User
 from .serializers import EmailSerializer, UserSerializer
+from .utils.email_client import ImapClient
 from .utils.fernet import encode_password
 
 
@@ -34,11 +36,15 @@ class EmailAPI(APIView):
 
     def post(self, request, tg_id, format=None):
         user = get_object_or_404(User, pk=tg_id)
+        email = request.data["email"]
+        last_uuid_seen = EmailReader(
+            ImapClient, email, request.data["password"]
+        ).get_last_uuid_email()
         password = encode_password(EmailServerConfig.fernet, request.data["password"])
         data_serializer = {
-            "email": request.data["email"],
+            "email": email,
             "password": password,
-            "last_uuid_seen": 1,
+            "last_uuid_seen": last_uuid_seen,
             "user": user.tg_id,
         }
         serializer = EmailSerializer(data=data_serializer)
