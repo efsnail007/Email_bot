@@ -4,10 +4,11 @@ from aiogram import Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.chat_action import ChatActionSender
-
-from create_bot import bot
+from create_bot import api_client, bot
 from keyboards.all_keyboards import main_kb
-from .states import Menu, AddEmail, ListEmail, DeleteEmail
+from utils.utils import get_email_list_to_text
+
+from .states import AddEmail, DeleteEmail, Menu
 
 menu_router = Router()
 
@@ -20,7 +21,13 @@ async def menu_message(message: Message, state: FSMContext):
             await message.answer("Пожалуйста введите логин почты!")
         await state.set_state(AddEmail.login)
     elif "Список почт" in message.text:
-        await state.set_state(ListEmail.list)
+        response, status = await api_client.get_list_email(message.from_user.id)
+        if status == 200:
+            await message.answer(
+                get_email_list_to_text(response), reply_markup=main_kb()
+            )
+        else:
+            await message.answer("Произошла ошибка на сервере!", reply_markup=main_kb())
     elif "Удалить почту" in message.text:
         async with ChatActionSender.typing(bot=bot, chat_id=message.chat.id):
             await asyncio.sleep(0.2)

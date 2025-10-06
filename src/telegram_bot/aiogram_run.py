@@ -1,9 +1,9 @@
 import asyncio
 
 from create_bot import bot, dp
+from handlers.add_email import add_email_router
 from handlers.menu import menu_router
 from handlers.start import start_router
-from handlers.add_email import add_email_router
 
 
 async def main():

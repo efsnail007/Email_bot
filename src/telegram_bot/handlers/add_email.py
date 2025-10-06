@@ -1,12 +1,13 @@
 import asyncio
+
 from aiogram import Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.chat_action import ChatActionSender
-
 from create_bot import bot
 from keyboards.all_keyboards import main_kb
-from .states import Menu, AddEmail
+
+from .states import AddEmail, Menu
 
 add_email_router = Router()
 

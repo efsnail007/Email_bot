@@ -11,9 +11,9 @@ class BackendAPIClient:
 
     async def create_user(self, tg_id: str, first_name: str, last_name: str):
         path = f"/api/user/"
-        data = {
-            "tg_id": tg_id,
-            "first_name": first_name,
-            "last_name": last_name
-        }
+        data = {"tg_id": tg_id, "first_name": first_name, "last_name": last_name}
         return await self.client.post(path, data=data)
+
+    async def get_list_email(self, tg_id: str):
+        path = f"/api/user/{tg_id}/email/"
+        return await self.client.get(path)

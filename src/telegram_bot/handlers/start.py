@@ -2,10 +2,10 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-
-from keyboards.all_keyboards import main_kb
 from create_bot import api_client
 from httpx import ConnectError
+from keyboards.all_keyboards import main_kb
+
 from .menu import Menu
 
 start_router = Router()

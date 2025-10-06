@@ -1,5 +1,5 @@
-import sys
 import logging
+import sys
 from enum import Enum
 from json import JSONDecodeError
 from typing import Any, Tuple, Type
@@ -12,7 +12,9 @@ def get_logger(level: str = logging.DEBUG):
     _logger = logging.getLogger("solution_logger")
     _logger.setLevel(level)
     handler = logging.StreamHandler(stream=sys.stdout)
-    handler.setFormatter(logging.Formatter(fmt="[%(asctime)s: %(levelname)s] %(message)s"))
+    handler.setFormatter(
+        logging.Formatter(fmt="[%(asctime)s: %(levelname)s] %(message)s")
+    )
     _logger.addHandler(handler)
     return _logger
 
@@ -39,15 +41,20 @@ class HTTPClient:
     async def delete(self, endpoint_path: str, **request_params) -> Any:
         return await self._request("DELETE", endpoint_path, **request_params)
 
-    async def _request(self, method: str, endpoint_path: str, **request_params: dict) -> tuple[
-        str | Any, Type[Enum] | Any]:
+    async def _request(
+        self, method: str, endpoint_path: str, **request_params: dict
+    ) -> tuple[str | Any, Type[Enum] | Any]:
         url: str = urljoin(self._base_url, endpoint_path)
         logger.debug(f"Request: {method} {endpoint_path}")
         async with httpx.AsyncClient() as client:
-            response: httpx.Response = await client.request(method, url, **request_params)
+            response: httpx.Response = await client.request(
+                method, url, **request_params
+            )
             try:
                 content = response.json()
             except JSONDecodeError:
                 content = response.text
-            logger.debug(f"Response: {content} Code: {httpx.codes(response.status_code)} ")
+            logger.debug(
+                f"Response: {content} Code: {httpx.codes(response.status_code)} "
+            )
             return content, httpx.codes(response.status_code)

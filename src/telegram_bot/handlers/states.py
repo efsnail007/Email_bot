@@ -6,10 +6,6 @@ class AddEmail(StatesGroup):
     password = State()
 
 
-class ListEmail(StatesGroup):
-    list = State()
-
-
 class DeleteEmail(StatesGroup):
     delete_email = State()
 
