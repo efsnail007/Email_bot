@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from imaplib import IMAP4
 
 from .apps import EmailServerConfig
 from .email_reader import EmailReader
@@ -37,9 +38,12 @@ class EmailAPI(APIView):
     def post(self, request, tg_id, format=None):
         user = get_object_or_404(User, pk=tg_id)
         email = request.data["email"]
-        last_uuid_seen = EmailReader(
-            ImapClient, email, request.data["password"]
-        ).get_last_uuid_email()
+        try:
+            last_uuid_seen = EmailReader(
+                ImapClient, email, request.data["password"]
+            ).get_last_uuid_email()
+        except IMAP4.error:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         password = encode_password(EmailServerConfig.fernet, request.data["password"])
         data_serializer = {
             "email": email,
