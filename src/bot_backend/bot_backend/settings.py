@@ -10,10 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-import os
 from pathlib import Path
 
-from decouple import AutoConfig, Csv
+from decouple import AutoConfig
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(" ")
-CSRF_TRUSTED_ORIGINS = ['http://localhost:1337', 'https://localhost:1337']
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337", "https://localhost:1337"]
 
 # Application definition
 
@@ -135,3 +134,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CELERY_BROKER_URL = f"redis://{config("REDIS_USER")}:{config("REDIS_PASSWORD")}@{config("REDIS_HOST")}:{config("REDIS_PORT")}/1"
 CELERY_RESULT_BACKEND = f"redis://{config("REDIS_USER")}:{config("REDIS_PASSWORD")}@{config("REDIS_HOST")}:{config("REDIS_PORT")}/1"
+
+BOT_TOKEN = config("BOT_TOKEN")
+FERNET_KEY = config("FERNET_KEY").encode()

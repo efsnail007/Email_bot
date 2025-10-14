@@ -1,5 +1,6 @@
 from .utils.email_client import BaseEmailClient, ImapClient
 
+
 class EmailReader:
     def __init__(
         self,
