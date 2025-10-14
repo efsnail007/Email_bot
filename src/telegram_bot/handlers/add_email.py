@@ -26,9 +26,13 @@ async def add_password(message: Message, state: FSMContext):
     await state.update_data(password=message.text)
     data = await state.get_data()
 
-    response, status = await api_client.create_email(message.from_user.id, data.get("login"), data.get("password"))
+    response, status = await api_client.create_email(
+        message.from_user.id, data.get("login"), data.get("password")
+    )
     if status == 201:
-        await message.answer("Почта добавлена для отслеживания!", reply_markup=main_kb())
+        await message.answer(
+            "Почта добавлена для отслеживания!", reply_markup=main_kb()
+        )
     elif status == 400:
         await message.answer("Неверный пароль!", reply_markup=main_kb())
     else:

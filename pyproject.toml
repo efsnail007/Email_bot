@@ -15,6 +15,7 @@ psycopg2-binary = "^2.9.10"
 djangorestframework = "^3.16.1"
 cryptography = "^46.0.2"
 httpx = "^0.28.1"
+celery = "^5.5.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.9.0"
