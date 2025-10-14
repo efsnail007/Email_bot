@@ -1,3 +1,10 @@
+"""
+Модуль задач Celery для приложения email_server.
+
+Содержит асинхронные задачи для проверки почтовых ящиков
+и отправки уведомлений в Telegram.
+"""
+
 import requests
 
 from bot_backend.celery import app

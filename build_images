@@ -1,5 +1,16 @@
 #!/bin/zsh
+# Скрипт для сборки Docker-образов приложения
+# Запуск: ./build_images
 
+# Сборка фронтенд-образа (Telegram бот)
+# -t front - задает имя образа как 'front'
+# -f src/telegram_bot/Dockerfile - указывает путь к Dockerfile для фронтенда
 docker build -t front -f src/telegram_bot/Dockerfile .
 
+# Сборка бэкенд-образа
+# -t backend - задает имя образа как 'backend'
+# -f src/bot_backend/Dockerfile - указывает путь к Dockerfile для бэкенда
 docker build -t backend -f src/bot_backend/Dockerfile .
+
+echo "Сборка образов завершена. Доступные образы:"
+docker images | grep -E 'front|backend'

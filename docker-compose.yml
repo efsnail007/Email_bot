@@ -1,84 +1,96 @@
+# Версия формата docker-compose
 version: '3.8'
 
 services:
+  # Сервис Telegram бота
   telegram_bot:
-    image: front:latest
+    image: front:latest  # Использует собранный образ front
     env_file:
-      - .env
+      - .env  # Загружает переменные окружения
     depends_on:
-      - redis
-      - backend
+      - redis    # Зависит от сервиса Redis
+      - backend  # Зависит от бэкенда
+
+  # Веб-сервер Nginx
   nginx:
-    build: ./nginx
+    build: ./nginx  # Собирает образ из Dockerfile в папке nginx
     ports:
-      - 1337:80
+      - 1337:80  # Пробрасывает порт 80 контейнера на порт 1337 хоста
     volumes:
-      - static_volume:/usr/src/app/staticfiles
+      - static_volume:/usr/src/app/staticfiles  # Общая папка для статических файлов
     depends_on:
-      - backend
+      - backend  # Зависит от бэкенда
+
+  # Бэкенд приложения на Django
   backend:
-    image: backend:latest
+    image: backend:latest  # Использует собранный образ backend
     command: > 
       sh -c '
-        python manage.py collectstatic --clear &&
-        python manage.py migrate &&
-        gunicorn bot_backend.wsgi:application --bind 0.0.0.0:8000  
+        python manage.py collectstatic --clear &&  # Собирает статические файлы
+        python manage.py migrate &&               # Применяет миграции
+        gunicorn bot_backend.wsgi:application --bind 0.0.0.0:8000  # Запускает приложение
       '
     expose:
-      - "8000"
+      - "8000"  # Открывает порт 8000 для других контейнеров
     volumes:
-      - static_volume:/usr/src/app/staticfiles
+      - static_volume:/usr/src/app/staticfiles  # Общая папка для статических файлов
     env_file:
-      - .env
+      - .env  # Загружает переменные окружения
     depends_on:
-      - redis
-      - postgres
+      - redis     # Зависит от Redis
+      - postgres  # Зависит от PostgreSQL
 
+  # Celery Worker для асинхронных задач
   celery:
-    image: backend:latest
+    image: backend:latest  # Использует тот же образ, что и бэкенд
     command: >
       sh -c '
-        celery -A bot_backend worker -l info
+        celery -A bot_backend worker -l info  # Запускает Celery worker
       '
     env_file:
-      - .env
+      - .env  # Загружает переменные окружения
     depends_on:
-      - redis
+      - redis  # Зависит от Redis
 
+  # Celery Beat для периодических задач
   celery-beat:
-    image: backend:latest
+    image: backend:latest  # Использует тот же образ, что и бэкенд
     command: >
       sh -c '
-        celery -A bot_backend beat -l info
+        celery -A bot_backend beat -l info  # Запускает Celery beat
       '
     env_file:
-      - .env
+      - .env  # Загружает переменные окружения
     depends_on:
-      - redis
+      - redis  # Зависит от Redis
+
+  # Сервис базы данных PostgreSQL
   postgres:
-    image: postgres
+    image: postgres  # Официальный образ PostgreSQL
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Пробрасывает порт 5432
     env_file:
-      - .env
+      - .env  # Загружает настройки БД из .env
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data  # Сохраняет данные БД в volume
+
+  # Сервис Redis для кеширования и Celery
   redis:
-    image: redis:latest
+    image: redis:latest  # Официальный образ Redis
     env_file:
-      - .env
+      - .env  # Загружает настройки Redis из .env
     ports:
-      - "6379:6379"
+      - "6379:6379"  # Пробрасывает порт 6379
     command: >
       sh -c '
         mkdir -p /usr/local/etc/redis &&
         echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf &&
-        redis-server /usr/local/etc/redis/redis.conf
+        redis-server /usr/local/etc/redis/redis.conf  # Настраивает и запускает Redis с паролем
       '
     volumes:
-      - db-data:/var/lib/redis/data
+      - db-data:/var/lib/redis/data  # Сохраняет данные Redis в volume
 
-
+# Определение томов для хранения данных
 volumes:
-  db-data:
-  static_volume:
+  db-data:      # Том для хранения данных PostgreSQL и Redis
+  static_volume:  # Том для статических файлов Django
