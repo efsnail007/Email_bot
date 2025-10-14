@@ -17,21 +17,18 @@ urlpatterns = [
         UserAPI.as_view(),
         name="user_set",
     ),
-    
     # Получение, обновление или удаление пользователя по его tg_id
     path(
         "user/<int:tg_id>/",
         UserDetailAPI.as_view(),
         name="user_detail",
     ),
-    
     # Получение списка почтовых ящиков пользователя или создание нового
     path(
         "user/<int:tg_id>/email/",
         EmailAPI.as_view(),
         name="email",
     ),
-    
     # Получение, обновление или удаление конкретного почтового ящика
     path(
         "user/<int:tg_id>/email/<str:pk>/",

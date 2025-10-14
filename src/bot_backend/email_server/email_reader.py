@@ -5,7 +5,7 @@
 для работы с почтовым клиентом и получения непрочитанных писем.
 """
 
-from typing import List, Tuple, Type, Any
+from typing import Any, List, Tuple, Type
 
 from .utils.email_client import BaseEmailClient, ImapClient
 
@@ -13,11 +13,11 @@ from .utils.email_client import BaseEmailClient, ImapClient
 class EmailReader:
     """
     Класс для чтения и обработки электронных писем.
-    
+
     Позволяет получать информацию о последних непрочитанных письмах
     и их содержимое, используя переданный почтовый клиент.
     """
-    
+
     def __init__(
         self,
         email_client: Type[BaseEmailClient],
@@ -27,7 +27,7 @@ class EmailReader:
     ) -> None:
         """
         Инициализация EmailReader.
-        
+
         Args:
             email_client: Класс почтового клиента, реализующий BaseEmailClient
             login: Логин (email) для входа в почтовый ящик
@@ -39,10 +39,10 @@ class EmailReader:
     def get_last_uid_email(self) -> int:
         """
         Получает UID последнего письма в почтовом ящике.
-        
+
         Returns:
             int: UID последнего письма
-            
+
         Пример использования:
             >>> reader = EmailReader(ImapClient, "user@example.com", "password")
             >>> last_uid = reader.get_last_uid_email()
@@ -50,17 +50,19 @@ class EmailReader:
         with self.email_client as client:
             return client.get_last_uid_email()
 
-    def get_and_read_last_unseen_emails(self, last_uuid: int) -> List[Tuple[str, str, str, str]]:
+    def get_and_read_last_unseen_emails(
+        self, last_uuid: int
+    ) -> List[Tuple[str, str, str, str]]:
         """
         Получает и читает все непрочитанные письма, начиная с указанного UID.
-        
+
         Args:
             last_uuid: UID последнего обработанного письма
-            
+
         Returns:
             List[Tuple[str, str, str, str]]: Список кортежей с информацией о письмах.
                 Каждый кортеж содержит (отправитель, получатель, тема, текст письма)
-                
+
         Пример использования:
             >>> reader = EmailReader(ImapClient, "user@example.com", "password")
             >>> last_processed_uid = 100

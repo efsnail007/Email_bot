@@ -3,6 +3,7 @@
 
 Этот модуль инициализирует и настраивает экземпляр Celery для работы с Django.
 """
+
 import os
 
 from celery import Celery

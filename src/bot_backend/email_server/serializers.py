@@ -13,13 +13,14 @@ from .models import Email, User
 class UserSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели User.
-    
+
     Преобразует объекты модели User в JSON и обратно.
     Используется для API-эндпоинтов, связанных с пользователями.
     """
-    
+
     class Meta:
         """Метаданные сериализатора User."""
+
         # Указываем модель, с которой работает сериализатор
         model = User
         # Включаем все поля модели в сериализацию
@@ -32,13 +33,14 @@ class UserSerializer(serializers.ModelSerializer):
 class EmailSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели Email.
-    
+
     Преобразует объекты модели Email в JSON и обратно.
     Автоматически скрывает пароль при сериализации (только для записи).
     """
-    
+
     class Meta:
         """Метаданные сериализатора Email."""
+
         # Указываем модель, с которой работает сериализатор
         model = Email
         # Включаем все поля модели в сериализацию
@@ -48,4 +50,3 @@ class EmailSerializer(serializers.ModelSerializer):
             # Пароль будет доступен только для записи (не отображается при чтении)
             "password": {"write_only": True}
         }
-
