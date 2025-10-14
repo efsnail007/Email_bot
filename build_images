@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+docker build -t front -f src/telegram_bot/Dockerfile .
+
+docker build -t backend -f src/bot_backend/Dockerfile .

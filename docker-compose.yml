@@ -1,15 +1,33 @@
 version: '3.8'
 
 services:
-  web:
+  telegram_bot:
+    image: front:latest
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - backend
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    volumes:
+      - static_volume:/usr/src/app/staticfiles
+    depends_on:
+      - backend
+  backend:
     image: backend:latest
-    container_name: backend_container
     command: > 
       sh -c '
-        python manage.py runserver 0.0.0.0:8000
+        python manage.py collectstatic --clear &&
+        python manage.py migrate &&
+        gunicorn bot_backend.wsgi:application --bind 0.0.0.0:8000  
       '
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
+    volumes:
+      - static_volume:/usr/src/app/staticfiles
     env_file:
       - .env
     depends_on:
@@ -18,7 +36,6 @@ services:
 
   celery:
     image: backend:latest
-    container_name: celery_container
     command: >
       sh -c '
         celery -A bot_backend worker -l info
@@ -30,7 +47,6 @@ services:
 
   celery-beat:
     image: backend:latest
-    container_name: celery_beat_container
     command: >
       sh -c '
         celery -A bot_backend beat -l info
@@ -47,14 +63,8 @@ services:
       - .env
     volumes:
       - db-data:/var/lib/postgresql/data
-  telegram_bot:
-    image: email_reader_front:latest
-    container_name: telegram_bot_container
-    env_file:
-      - .env
   redis:
     image: redis:latest
-    container_name: redis_container
     env_file:
       - .env
     ports:
@@ -71,3 +81,4 @@ services:
 
 volumes:
   db-data:
+  static_volume:
